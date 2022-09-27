@@ -1,7 +1,8 @@
 name: Citedessables
 version: '${project.version}'
-main: me.dofsekai.citedessables.Main
+main: me.dofsekai.Main
 api-version: 1.19
 authors: [ DofSekai ]
 commands:
   cteam:
+  test:

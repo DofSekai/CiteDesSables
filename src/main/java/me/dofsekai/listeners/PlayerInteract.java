@@ -3,6 +3,7 @@ package me.dofsekai.listeners;
 import me.dofsekai.core.PlayerState;
 import me.dofsekai.core.Profile;
 import me.dofsekai.core.Team;
+import me.dofsekai.menus.TeamMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,27 +34,8 @@ public class PlayerInteract implements Listener {
                         Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.CREATING_TEAM);
                     case "Inviter dans la Team":
                         player.closeInventory();
-                        // new AnvilGUI.Builder()
-                        //     .onClose(players -> {
-                        //         players.sendMessage("closed");
-                        //     })
-                        //     .onComplete((players, text) -> {
-                        //         if(text.equalsIgnoreCase("you")) {
-                        //             players.sendMessage("You have magical powers!");
-                        //             return AnvilGUI.Response.close();
-                        //         } else {
-                        //             return AnvilGUI.Response.text("Incorrect.");
-                        //         }
-                        //     })
-                        //     .preventClose()
-                        //     .text("What is the meaning of life?")
-                        //     .itemLeft(new ItemStack(Material.IRON_SWORD))
-                        //     .itemRight(new ItemStack(Material.IRON_SWORD))
-                        //     .onLeftInputClick(players -> players.sendMessage("first sword"))
-                        //     .onRightInputClick(players -> players.sendMessage("second sword"))
-                        //     .title("Enter your answer.")
-                        //     .plugin((Plugin) Main.getInstance())
-                        //     .open(player);
+                        Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.INVITE_PLAYER);
+                        TeamMenu.Invite(player);
                     default:
                         break;
                 }

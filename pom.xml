@@ -70,5 +70,10 @@
             <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.wesjd</groupId>
+            <artifactId>anvilgui</artifactId>
+            <version>1.5.3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
