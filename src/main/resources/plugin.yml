@@ -1,0 +1,7 @@
+name: Citedessables
+version: '${project.version}'
+main: me.dofsekai.citedessables.Main
+api-version: 1.19
+authors: [ DofSekai ]
+commands:
+  cteam:
