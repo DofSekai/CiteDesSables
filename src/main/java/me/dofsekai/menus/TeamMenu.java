@@ -27,11 +27,7 @@ public class TeamMenu {
                     Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
                 })
                 .onComplete((players, text) -> {
-                    if (Bukkit.getPlayer(text) == null) {
-                        players.sendMessage("Ce joueur n'est pas connecté");
-                    } else {
-                        players.sendMessage("Tu as invité le joueur " + Bukkit.getPlayer(text).getName());
-                    }
+                    if(text == null) return AnvilGUI.Response.close();
                     return AnvilGUI.Response.close();
                 })
                 .text("Entrer le joueur ici")

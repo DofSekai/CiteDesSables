@@ -1,22 +1,28 @@
 package me.dofsekai.core;
 
+import me.dofsekai.utils.MessageClickable;
+
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Team {
 
     private final String name;
+    private static final int maxCharactersName = 15;
     private final UUID leaderUUID;
     private int money;
-    private ArrayList<UUID> members = new ArrayList<>();
-    private final int maxPlayer = 5;
-    private static ArrayList<Team> teamsList = new ArrayList<>();
+    private final ArrayList<UUID> members = new ArrayList<>();
+    private static final ArrayList<Team> teamsList = new ArrayList<>();
+    private final ArrayList<UUID> invited;
 
     public Team(String name, UUID leaderUUID, int money) {
         this.name = name;
         this.leaderUUID = leaderUUID;
         this.money = money;
-        this.members.add(leaderUUID);
+        this.addMembers(leaderUUID);
+        this.invited = new ArrayList<>();
         teamsList.add(this);
     }
 
@@ -38,6 +44,12 @@ public class Team {
         return null;
     }
 
+    public static boolean hasSpecialCharacters(String name) {
+        Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(name);
+        return m.find();
+    }
+
     public String getName() {
         return name;
     }
@@ -50,11 +62,26 @@ public class Team {
         return money;
     }
 
-    public void addMembers(UUID playerUUID) {
-        if (this.members.size() < maxPlayer) this.members.add(playerUUID);
-    }
+    public static int getMaxCharactersName() { return maxCharactersName; }
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public void addMembers(UUID playerUUID) {
+        if (this.members.size() < 2) this.members.add(playerUUID);
+    }
+
+    public boolean isInvited(UUID playerUUID) {
+        return this.invited.contains(playerUUID);
+    }
+
+    public void invite(UUID playerInviteUUID, UUID playerInvitedUUID) {
+        if (!this.invited.contains(playerInvitedUUID)) this.invited.add(playerInvitedUUID);
+        MessageClickable.inviteMessage(this, playerInviteUUID, playerInvitedUUID);
+    }
+
+    public boolean isLeader(UUID playerUUID) {
+        return this.leaderUUID.equals(playerUUID);
     }
 }

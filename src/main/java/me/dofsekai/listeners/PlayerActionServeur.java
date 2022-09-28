@@ -1,6 +1,7 @@
 package me.dofsekai.listeners;
 
 import me.dofsekai.Main;
+import me.dofsekai.core.PlayerState;
 import me.dofsekai.core.Profile;
 import me.dofsekai.core.Team;
 import org.bukkit.Bukkit;
@@ -22,6 +23,9 @@ public class PlayerActionServeur implements Listener {
         final Player player = e.getPlayer();
         if (!Profile.hasProfile(player.getUniqueId())) {
             new Profile(player.getName(), player.getUniqueId());
+            System.out.println("profile créé");
+        } else {
+            System.out.println("profile déjà créé");
         }
     }
 
@@ -29,6 +33,16 @@ public class PlayerActionServeur implements Listener {
     public void onTalk(AsyncPlayerChatEvent e) {
         final Player player = e.getPlayer();
         final String message = e.getMessage();
+        if(Team.hasSpecialCharacters(message)) {
+            e.setCancelled(true);
+            player.sendMessage("Erreur : ta team possède des caractères spéciaux");
+            return;
+        }
+        if (message.length() > Team.getMaxCharactersName()) {
+            e.setCancelled(true);
+            player.sendMessage("Erreur : la limite de caractères est fixée à 15");
+            return;
+        }
         messages.put(player.getUniqueId(), message);
         final Profile profile = Profile.getProfileOfPlayer(player.getUniqueId());
         final Team team = Team.getTeamOf(player.getUniqueId());

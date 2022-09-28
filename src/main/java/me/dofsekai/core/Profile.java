@@ -14,8 +14,8 @@ public class Profile {
     public Profile(String name, UUID uuid) {
         this.name = name;
         this.uuid = uuid;
-        team = null;
-        playerstate = PlayerState.NOTHING;
+        this.team = null;
+        this.playerstate = PlayerState.NOTHING;
         profiles.add(this);
     }
 
@@ -27,32 +27,28 @@ public class Profile {
         return uuid;
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     public PlayerState getPlayerstate() {
         return playerstate;
     }
+
+    public Team getTeam() { return team; }
+
+    public void setTeam(Team team) { this.team = team; }
 
     public void setPlayerstate(PlayerState playerstate) {
         this.playerstate = playerstate;
     }
 
     public static boolean hasProfile(UUID playerUUID) {
-        for (int i = 0; i < profiles.size(); i++) {
-            if (profiles.get(i).getUuid() == playerUUID) return true;
+        for (Profile profile : profiles) {
+            if (profile.getUuid().equals(playerUUID)) return true;
         }
         return false;
     }
 
     public static Profile getProfileOfPlayer(UUID playerUUID) {
-        for (int i = 0; i < profiles.size(); i++) {
-            if (profiles.get(i).getUuid() == playerUUID) return profiles.get(i);
+        for (Profile profile : profiles) {
+            if (profile.getUuid().equals(playerUUID)) return profile;
         }
         return null;
     }
