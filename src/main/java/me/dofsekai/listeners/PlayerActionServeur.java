@@ -1,7 +1,6 @@
 package me.dofsekai.listeners;
 
 import me.dofsekai.Main;
-import me.dofsekai.core.PlayerState;
 import me.dofsekai.core.Profile;
 import me.dofsekai.core.Team;
 import org.bukkit.Bukkit;
@@ -10,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -26,6 +26,14 @@ public class PlayerActionServeur implements Listener {
             System.out.println("profile créé");
         } else {
             System.out.println("profile déjà créé");
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        final Player player = e.getPlayer();
+        for (Team team : Team.getAllTeams()) {
+            team.removeInvite(player.getUniqueId());
         }
     }
 

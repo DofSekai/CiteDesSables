@@ -13,7 +13,7 @@ public class MessageClickable {
 
     public static void inviteMessage(Team team, UUID playerInviteUUID, UUID playerInvitedUUID) {
         Bukkit.getPlayer(playerInvitedUUID).sendMessage(Bukkit.getPlayer(team.getLeaderUUID()) + " vous a invité à rejoindre sa team " + team.getName());
-        TextComponent msg = new TextComponent("[Clique ici]");
+        TextComponent msg = new TextComponent("[Rejoindre]");
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rejoindre la team").create()));
         msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cteam join " + team.getName() + " " + Bukkit.getPlayer(playerInvitedUUID).getName()));
         Bukkit.getPlayer(playerInvitedUUID).spigot().sendMessage(msg);

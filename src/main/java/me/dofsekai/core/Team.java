@@ -84,4 +84,14 @@ public class Team {
     public boolean isLeader(UUID playerUUID) {
         return this.leaderUUID.equals(playerUUID);
     }
+
+    //Déconnexion du joueur
+    public void removeInvite(UUID playerUUID) {
+        if (this.invited.contains(playerUUID)) return;
+        this.invited.remove(playerUUID);
+    }
+    
+    public static ArrayList<Team> getAllTeams() {
+        return teamsList;
+    }
 }

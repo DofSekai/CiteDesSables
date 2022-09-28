@@ -60,6 +60,11 @@ public class CTteamCommand implements CommandExecutor {
                 profilePlayerInvite.setPlayerstate(PlayerState.NOTHING);
                 return true;
             }
+
+            if (args.length > 1 && args[0].equalsIgnoreCase("join")) {
+                Team team = Team.getTeamByName(args[1]);
+                Player player = Bukkit.getPlayer(args[2]);
+            }
         }
         return true;
     }

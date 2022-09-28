@@ -51,6 +51,12 @@ public class PlayerInteract implements Listener {
                         Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.INVITE_PLAYER);
                         TeamMenu.Invite(player);
                         break;
+                    case "Rejoindre une Team":
+                        player.closeInventory();
+                        if (Team.getTeamOf(player.getUniqueId()) != null) {
+                            player.sendMessage("T'a déjà une team toi !!");
+                            break;
+                        }
                     default:
                         break;
                 }
