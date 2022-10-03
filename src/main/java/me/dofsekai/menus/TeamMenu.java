@@ -3,6 +3,7 @@ package me.dofsekai.menus;
 import me.dofsekai.Main;
 import me.dofsekai.core.PlayerState;
 import me.dofsekai.core.Profile;
+import me.dofsekai.core.Team;
 import me.dofsekai.utils.ItemBuilder;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -10,6 +11,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamMenu {
 
@@ -24,7 +28,7 @@ public class TeamMenu {
     public static void Invite(Player player) {
         new AnvilGUI.Builder()
                 .onClose(players -> {
-                    Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
+                    Profile.getProfileOfPlayer(players.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
                 })
                 .onComplete((players, text) -> {
                     if(text == null) return AnvilGUI.Response.close();
@@ -35,5 +39,18 @@ public class TeamMenu {
                 .title("Joueur à inviter !")
                 .plugin(Main.getPlugin(Main.class))
                 .open(player);
+    }
+
+    public static Inventory Join() {
+        int invSize = (int) (Team.getAllTeams().size() / 9) + 1;
+        Inventory inv = Bukkit.createInventory(null, invSize * 9, "Team List");
+        List<String> joinTeam = new ArrayList<>();
+        joinTeam.add("Clique ici pour rejoindre");
+        for (Team t : Team.getAllTeams()) {
+            for (int i = 0; i < t.getInvited().size(); i++) {
+                inv.setItem(i, ItemBuilder.getItem(Material.PAPER, t.getName(), joinTeam));
+            }
+        }
+        return inv;
     }
 }

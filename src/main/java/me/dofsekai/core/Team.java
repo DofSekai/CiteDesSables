@@ -1,6 +1,6 @@
 package me.dofsekai.core;
 
-import me.dofsekai.utils.MessageClickable;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -68,17 +68,19 @@ public class Team {
         this.money = money;
     }
 
-    public void addMembers(UUID playerUUID) {
-        if (this.members.size() < 2) this.members.add(playerUUID);
+    public boolean addMembers(UUID playerUUID) {
+        if (this.members.size() > 2) return false;
+        this.members.add(playerUUID);
+        return true;
     }
 
     public boolean isInvited(UUID playerUUID) {
         return this.invited.contains(playerUUID);
     }
 
-    public void invite(UUID playerInviteUUID, UUID playerInvitedUUID) {
-        if (!this.invited.contains(playerInvitedUUID)) this.invited.add(playerInvitedUUID);
-        MessageClickable.inviteMessage(this, playerInviteUUID, playerInvitedUUID);
+    public void invite(UUID playerInvitedUUID) {
+        this.invited.add(playerInvitedUUID);
+        Bukkit.getPlayer(this.leaderUUID).sendMessage(Bukkit.getPlayer(this.leaderUUID).getName() + " vous a invité dans la team " + this.name);
     }
 
     public boolean isLeader(UUID playerUUID) {
@@ -94,4 +96,16 @@ public class Team {
     public static ArrayList<Team> getAllTeams() {
         return teamsList;
     }
+
+    public ArrayList<UUID> getInvited() { return this.invited; }
+
+    public void kick(UUID playerUUID) {
+        if (this.members.contains(playerUUID)) this.members.remove(playerUUID);
+    }
+
+    public static void disband(Team team) {
+        teamsList.remove(team);
+    }
+
+    public ArrayList<UUID> getMembers() { return members; }
 }

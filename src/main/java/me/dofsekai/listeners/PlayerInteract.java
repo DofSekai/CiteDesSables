@@ -53,13 +53,37 @@ public class PlayerInteract implements Listener {
                         break;
                     case "Rejoindre une Team":
                         player.closeInventory();
+                        int invitations = 0;
                         if (Team.getTeamOf(player.getUniqueId()) != null) {
                             player.sendMessage("T'a déjà une team toi !!");
                             break;
                         }
+                        for (Team t : Team.getAllTeams()) {
+                            for (int i = 0; i < Team.getAllTeams().size(); i++) {
+                                if (t.isInvited(player.getUniqueId())) invitations += 1;
+                            }
+                        }
+                        if (invitations == 0) {
+                            player.sendMessage("Aucune team t'a invité");
+                            break;
+                        }
+                        Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.JOINING_TEAM);
+                        player.openInventory(TeamMenu.Join());
+                        break;
                     default:
                         break;
                 }
+            case "Team List":
+                e.setCancelled(true);
+                if (Team.getTeamByName(currentItem.getItemMeta().getDisplayName()) == null) break;
+                Team team = Team.getTeamByName(currentItem.getItemMeta().getDisplayName());
+                if (!team.addMembers(player.getUniqueId())) {
+                    player.sendMessage("La team est déjà complète");
+                    break;
+                }
+                team.addMembers(player.getUniqueId());
+                player.closeInventory();
+                break;
             default:
                 break;
         }
@@ -67,7 +91,10 @@ public class PlayerInteract implements Listener {
         if(e.getInventory().getType() == InventoryType.ANVIL && viewing.getTitle().equalsIgnoreCase("Joueur à inviter !")) {
             if(e.getInventory().getItem(2) == null) return;
             String playerHeadInvited = e.getInventory().getItem(2).getItemMeta().getDisplayName();
-            if (Bukkit.getPlayer(playerHeadInvited) == null) return;
+            if (Bukkit.getPlayer(playerHeadInvited) == null) {
+                player.sendMessage("Ce connard n'est pas connecté !");
+                return;
+            }
             UUID playerInvitedUUID = Bukkit.getPlayer(playerHeadInvited).getUniqueId();
             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "cteam invite " + player.getName() + " " + Bukkit.getPlayer(playerInvitedUUID).getName());
         }

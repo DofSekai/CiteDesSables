@@ -1,15 +1,19 @@
 package me.dofsekai.listeners;
 
 import me.dofsekai.Main;
+import me.dofsekai.core.PlayerState;
 import me.dofsekai.core.Profile;
 import me.dofsekai.core.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -70,6 +74,16 @@ public class PlayerActionServeur implements Listener {
                 break;
             default:
                 break;
+        }
+    }
+
+    @EventHandler
+    public void onCloseInventory(InventoryCloseEvent e) {
+        final Player player = (Player) e.getPlayer();
+        final InventoryView viewing = e.getView();
+
+        if (viewing.getTitle().equalsIgnoreCase("Team List")) {
+            Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
         }
     }
 }

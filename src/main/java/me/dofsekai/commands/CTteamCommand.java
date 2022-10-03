@@ -25,7 +25,6 @@ public class CTteamCommand implements CommandExecutor {
         if (sender instanceof ConsoleCommandSender) {
             if (args.length > 1 && args[0].equalsIgnoreCase("create")) {
                 Player player = Bukkit.getPlayer(args[1]);
-                Profile profile = Profile.getProfileOfPlayer(player.getUniqueId());
                 if (Team.getTeamByName(args[2]) != null) {
                     player.sendMessage("Cette team est déjà créée.");
                     player.sendMessage("Ecrivez un autre nom de team");
@@ -34,7 +33,7 @@ public class CTteamCommand implements CommandExecutor {
                 Team team = new Team(args[2], player.getUniqueId(), 0);
                 Bukkit.broadcastMessage("La team " + team.getName() + " a été créée.");
                 team.setMoney(0);
-                profile.setPlayerstate(PlayerState.NOTHING);
+                Profile.getProfileOfPlayer(player.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
                 return true;
             }
 
@@ -54,16 +53,23 @@ public class CTteamCommand implements CommandExecutor {
                     playerInvite.sendMessage("Une fois pas deux !!");
                     return false;
                 }
-                Profile profilePlayerInvite = Profile.getProfileOfPlayer(playerInvite.getUniqueId());
-                team.invite(playerInvite.getUniqueId(), playerInvited.getUniqueId());
+                team.invite(playerInvited.getUniqueId());
                 playerInvite.sendMessage("Vous avez invité " + playerInvited.getName());
-                profilePlayerInvite.setPlayerstate(PlayerState.NOTHING);
+                Profile.getProfileOfPlayer(playerInvite.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
                 return true;
             }
 
             if (args.length > 1 && args[0].equalsIgnoreCase("join")) {
                 Team team = Team.getTeamByName(args[1]);
-                Player player = Bukkit.getPlayer(args[2]);
+                Player playerInvite = Bukkit.getPlayer(args[2]);
+                Player playerInvited = Bukkit.getPlayer(args[3]);
+                if (!team.addMembers(playerInvited.getUniqueId())) {
+                    playerInvite.sendMessage("Team complète");
+                }
+                team.addMembers(playerInvited.getUniqueId());
+                team.getMembers().forEach(p -> Bukkit.getPlayer(p).sendMessage(playerInvited.getName() + " a rejoint votre team"));
+                Profile.getProfileOfPlayer(playerInvited.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
+                return true;
             }
         }
         return true;

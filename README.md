@@ -13,4 +13,5 @@ si joueur a invité est déjà membre team pas invite
 si joueur a invité a déjà été invite pas invite  
 
 # join  
-si joueur déjà dans une team pas join une autre
+si joueur déjà dans une team pas join une autre  
+si la team est plus de 5 pas join  
