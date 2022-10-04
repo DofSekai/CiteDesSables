@@ -57,7 +57,7 @@ public class PlayerActionServeur implements Listener {
         }
         messages.put(player.getUniqueId(), message);
         final Profile profile = Profile.getProfileOfPlayer(player.getUniqueId());
-        final Team team = Team.getTeamOf(player.getUniqueId());
+        final Team team = Team.getTeamOf(player);
 
         switch(profile.getPlayerstate()) {
             case CREATING_TEAM:

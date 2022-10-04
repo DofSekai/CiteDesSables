@@ -30,7 +30,7 @@ public class PlayerInteract implements Listener {
                 switch(currentItem.getItemMeta().getDisplayName()) {
                     case "Création de Team":
                         player.closeInventory();
-                        if (Team.getTeamOf(player.getUniqueId()) != null) {
+                        if (Team.getTeamOf(player) != null) {
                             player.sendMessage("T'a déjà une team toi !!");
                             break;
                         }
@@ -39,12 +39,12 @@ public class PlayerInteract implements Listener {
                         break;
                     case "Inviter dans la Team":
                         player.closeInventory();
-                        if (Team.getTeamOf(player.getUniqueId()) == null) {
+                        if (Team.getTeamOf(player) == null) {
                             player.sendMessage("Tu n'as pas de team !!");
                             break;
                         }
-                        Team team = Team.getTeamOf(player.getUniqueId());
-                        if (!team.isLeader(player.getUniqueId())) {
+                        Team team = Team.getTeamOf(player);
+                        if (!team.getLeader().equals(player)) {
                             player.sendMessage("Le leader c'est pas toi !!");
                             break;
                         }
@@ -54,7 +54,7 @@ public class PlayerInteract implements Listener {
                     case "Rejoindre une Team":
                         player.closeInventory();
                         int invitations = 0;
-                        if (Team.getTeamOf(player.getUniqueId()) != null) {
+                        if (Team.getTeamOf(player) != null) {
                             player.sendMessage("T'a déjà une team toi !!");
                             break;
                         }
@@ -77,11 +77,11 @@ public class PlayerInteract implements Listener {
                 e.setCancelled(true);
                 if (Team.getTeamByName(currentItem.getItemMeta().getDisplayName()) == null) break;
                 Team team = Team.getTeamByName(currentItem.getItemMeta().getDisplayName());
-                if (!team.addMembers(player.getUniqueId())) {
+                if (!team.addMembers(player)) {
                     player.sendMessage("La team est déjà complète");
                     break;
                 }
-                team.addMembers(player.getUniqueId());
+                team.addMembers(player);
                 player.closeInventory();
                 break;
             default:
