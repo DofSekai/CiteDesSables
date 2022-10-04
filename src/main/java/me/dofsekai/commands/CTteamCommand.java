@@ -17,31 +17,32 @@ public class CTteamCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String msg, String[] args) {
 
-        if (sender instanceof Player) {
-            if (!sender.isOp()) {
-                Player player = (Player) sender;
-                if (Profile.getProfileOfPlayer(player.getUniqueId()).getPlayerstate() == PlayerState.NOTHING)
-                    player.openInventory(TeamMenu.General());
+        if (sender.isOp()) {
+            if (args.length > 1 && args[0].equalsIgnoreCase("kick")) {
+                Team team = Team.getTeamOf(Bukkit.getOfflinePlayer(args[1]));
+                if (team == null) return false;
+                if (team.getLeader().equals(Bukkit.getOfflinePlayer(args[1]))) {
+                    sender.sendMessage("pas possible c'est un leader");
+                    return false;
+                }
+                team.kick(Bukkit.getOfflinePlayer(args[1]));
+                sender.sendMessage(Bukkit.getOfflinePlayer(args[1]).getName() + " a été kick de sa team");
                 return true;
-            } else {
-                if (args.length > 1 && args[0].equalsIgnoreCase("kick")) {
-                    Team team = Team.getTeamOf(Bukkit.getOfflinePlayer(args[1]));
-                    if (team == null) return false;
-                    if (team.getLeader().equals(Bukkit.getOfflinePlayer(args[1]))) {
-                        sender.sendMessage("pas possible c'est un leader");
-                        return false;
-                    }
-                    team.kick(Bukkit.getOfflinePlayer(args[1]));
-                    sender.sendMessage(Bukkit.getOfflinePlayer(args[1]).getName() + " a été kick de sa team");
-                    return true;
-                }
-                if (args.length > 1 && args[0].equalsIgnoreCase("disband")) {
-                    Team team = Team.getTeamByName(args[1]);
-                    if (team == null) return false;
-                    Team.disband(team);
-                    sender.sendMessage("la team " + team.getName() + " a été disband");
-                    return true;
-                }
+            }
+            if (args.length > 1 && args[0].equalsIgnoreCase("disband")) {
+                Team team = Team.getTeamByName(args[1]);
+                if (team == null) return false;
+                Team.disband(team);
+                sender.sendMessage("la team " + team.getName() + " a été disband");
+                return true;
+            }
+        }
+
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (Profile.getProfileOfPlayer(player.getUniqueId()).getPlayerstate() == PlayerState.NOTHING) {
+                player.openInventory(TeamMenu.General());
+                return true;
             }
         }
 
@@ -84,16 +85,19 @@ public class CTteamCommand implements CommandExecutor {
             }
 
             if (args.length > 1 && args[0].equalsIgnoreCase("join")) {
+                System.out.println("ok");
                 Team team = Team.getTeamByName(args[1]);
                 Player playerInvite = Bukkit.getPlayer(args[2]);
                 Player playerInvited = Bukkit.getPlayer(args[3]);
-                if (!team.addMembers(playerInvited)) {
+                if (team.getMembers().size() >= 2) {
                     playerInvite.sendMessage("Team complète");
+                    return false;
+                }
+                playerInvited.sendMessage("Tu as rejoint la team.");
+                for (OfflinePlayer p : team.getMembers()) {
+                    if (p.isOnline()) Bukkit.getPlayer(p.getUniqueId()).sendMessage(playerInvited.getName() + " a rejoint la team");
                 }
                 team.addMembers(playerInvited);
-                for (OfflinePlayer player : team.getMembers()) {
-                    if (player.isOnline()) Bukkit.getPlayer(player.getName()).sendMessage(playerInvited.getName() + " a rejoint votre team");
-                }
                 Profile.getProfileOfPlayer(playerInvited.getUniqueId()).setPlayerstate(PlayerState.NOTHING);
                 return true;
             }

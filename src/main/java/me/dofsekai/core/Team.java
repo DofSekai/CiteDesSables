@@ -68,10 +68,8 @@ public class Team {
         this.money = money;
     }
 
-    public boolean addMembers(OfflinePlayer player) {
-        if (this.members.size() >= 2) return false;
+    public void addMembers(OfflinePlayer player) {
         this.members.add(player);
-        return true;
     }
 
     public boolean isInvited(UUID playerUUID) {

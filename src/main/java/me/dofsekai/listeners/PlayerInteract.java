@@ -5,6 +5,8 @@ import me.dofsekai.core.Profile;
 import me.dofsekai.core.Team;
 import me.dofsekai.menus.TeamMenu;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,11 +79,12 @@ public class PlayerInteract implements Listener {
                 e.setCancelled(true);
                 if (Team.getTeamByName(currentItem.getItemMeta().getDisplayName()) == null) break;
                 Team team = Team.getTeamByName(currentItem.getItemMeta().getDisplayName());
-                if (!team.addMembers(player)) {
+                if (team.getMembers().size() >= 2) {
                     player.sendMessage("La team est déjà complète");
+                    player.closeInventory();
                     break;
                 }
-                team.addMembers(player);
+                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "cteam join " + team.getName() + " " + team.getLeader().getName() + " " + player.getName());
                 player.closeInventory();
                 break;
             default:
@@ -96,6 +99,14 @@ public class PlayerInteract implements Listener {
                 return;
             }
             UUID playerInvitedUUID = Bukkit.getPlayer(playerHeadInvited).getUniqueId();
+            if (Team.getTeamOf(Bukkit.getPlayer(playerInvitedUUID)) != null) {
+                player.sendMessage("Ce batard a une team");
+                return;
+            }
+            if (Team.getTeamOf(player).getMembers().size() >= 2) {
+                player.sendMessage("Team complète");
+                return;
+            }
             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "cteam invite " + player.getName() + " " + Bukkit.getPlayer(playerInvitedUUID).getName());
         }
     }
